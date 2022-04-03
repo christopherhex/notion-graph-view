@@ -6,6 +6,20 @@
     <script type="module">
       import * as d3 from "https://cdn.skypack.dev/d3@7";
 
+      // https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
+      const stringToColour = (str) => {
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+          hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        var colour = "#";
+        for (var i = 0; i < 3; i++) {
+          var value = (hash >> (i * 8)) & 0xff;
+          colour += ("00" + value.toString(16)).substr(-2);
+        }
+        return colour;
+      };
+
       // set the dimensions and margins of the graph
       var margin = { top: 10, right: 30, bottom: 30, left: 40 },
         width = 800 - margin.left - margin.right,
@@ -35,6 +49,7 @@
         return {
           id: page.Id,
           name: page.Id,
+          color: stringToColour(page.ParentDatabaseId),
         };
       });
 
@@ -59,7 +74,7 @@
         .data(dataNodes)
         .enter()
         .append("circle")
-        .attr("r", 20)
+        .attr("r", 10)
         .style("fill", "#69b3a2");
 
       // Let's list the force we wanna apply on the network
@@ -74,7 +89,7 @@
             }) // This provide  the id of a node
             .links(dataLinks) // and this the list of links
         )
-        .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+        .force("charge", d3.forceManyBody().strength(-300)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
         .force("center", d3.forceCenter()) // This force attracts nodes to the center of the svg area
         .on("end", ticked);
 
@@ -87,6 +102,8 @@
           .attr("y2", (d) => d.target.y);
 
         node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+
+        node.style("fill", (d) => d.color);
       }
 
       d3.select("svg").call(zoom);

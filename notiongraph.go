@@ -13,19 +13,6 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-// This follows the RAW notion api structure
-type RawNotionDataItem struct {
-	Id string
-	Object string
-	Url string
-	Name string 
-}
-
-type NotionSearchResult struct {
-	Object string
-	Results []RawNotionDataItem
-}
-
 type NotionDatabase struct {
 	Id string
 	Url string
@@ -48,6 +35,7 @@ type NotionPageLink struct {
 type NotionGraph struct {
 	Pages []NotionPage
 	Links []NotionPageLink
+	Databases []NotionDatabase
 }
 
 var mu sync.Mutex
@@ -106,6 +94,7 @@ func main(){
 	file, _ := json.MarshalIndent(NotionGraph{
 		Pages: pagesToCheck,
 		Links: pageLinks,
+		Databases: availableDatabases,
 	}, "", " ")
  
 	_ = ioutil.WriteFile("test.json", file, 0644)

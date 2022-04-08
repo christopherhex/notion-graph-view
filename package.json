@@ -6,7 +6,9 @@
   "scripts": {
     "copy_wasm_js": "cp $(go env GOROOT)/misc/wasm/wasm_exec.js src/assets/wasm_exec.js",
     "compile_wasm": "cd src/wasm && GOOS=js GOARCH=wasm go build -o ../../src/assets/main.wasm notiongraph.go",
-    "build": "npm run copy_wasm_js && npm run compile_wasm && preact build",
+    "copy_wasm_js_tinygo": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js src/assets/wasm_exec.js",
+    "compile_wasm_tinygo": "cd src/wasm && tinygo build -target wasm -o ../../src/assets/main.wasm notiongraph.go",
+    "build": "npm run copy_wasm_js_tinygo && npm run compile_wasm_tinygo && preact build --no-prerender",
     "serve": "sirv build --port 8080 --cors --single",
     "dev": "preact watch",
     "lint": "eslint src",
@@ -31,6 +33,7 @@
   "dependencies": {
     "d3": "^7.4.2",
     "preact": "^10.6.7",
+    "preact-head": "^1.0.3",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1"
   },

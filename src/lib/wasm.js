@@ -6,7 +6,7 @@ const wasmLib = async () => {
         return resultObj.instance;
     }
 
-    const go = new Go();
+    const go = new window.Go();
     resultObj = await WebAssembly.instantiateStreaming(
         fetch("/assets/main.wasm"),
         go.importObject

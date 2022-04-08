@@ -1,0 +1,25 @@
+name: Build & Deploy to GH Pages
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: macos-11
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.17"
+      - uses: acifani/setup-tinygo@v1
+      - name: Build application
+        run: |
+          npm install
+          npm run build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public

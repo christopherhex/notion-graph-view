@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[2],{"+1Jk":function(o,n,e){"use strict";e.r(n);var c=e("hosL"),t=e("BPqR"),s="home__uRcqa";n.default=function(o){console.log(o);var n=o.notionKey;return Object(c.h)("div",{class:s},Object(c.h)(t.a,{notionKey:n}))}}}]);
-//# sourceMappingURL=route-home.chunk.76a1c.js.map

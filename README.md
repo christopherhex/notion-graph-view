@@ -1,22 +1,15 @@
-# notion-graph
+# Notion Graph View
 
-## CLI Commands
+[Notion](https://www.notion.so) is a knowledge management system with a very nice API. You can easily link pages. This project attempts to visualise those links nicely in a similar way that [Obsidian](https://obsidian.md), another knowledge base project, does.
 
-``` bash
-# install dependencies
-npm install
+![Notion Graph Example](/assets/graph_example.png)
 
-# serve with hot reload at localhost:8080
-npm run dev
+## How to create the knowledge graph.
 
-# build for production with minification
-npm run build
+- [Generate a Notion API Key](https://www.notion.so/my-integrations) and add it to a `.env.local` file in the root of the repository as `NOTION_API_KEY=<secret>`
+- Give the integration access to all databases that you want to include in the graph.
+- Run the tool: `go run notiongraph.go`. This will generate a JSON file `test.json` that contains all the graph data
+- To visualise the graph, use a simple http server (e.g. [http-server](https://www.npmjs.com/package/http-server)) to host the `index.html` file
+- Open your browser and the graph should appear
 
-# test the production build locally
-npm run serve
-
-# run tests with jest and enzyme
-npm run test
-```
-
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
+## How to use

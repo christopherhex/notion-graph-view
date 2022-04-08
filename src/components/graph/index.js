@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import wasmLib from '../../lib/wasm';
 import style from './style.css';
 import * as d3 from "d3";
 import { geoConicEquidistantRaw } from 'd3';
@@ -32,9 +33,11 @@ const Graph = ({ notionKey }) => {
 
     if (!data) {
         // Getdata is a wasm function
-        getData(notionKey).then(res => {
-            setData(JSON.parse(res));
-        })
+        wasmLib().then(exp => {
+            getData(notionKey).then(res => {
+                setData(JSON.parse(res));
+            });
+        });
     }
 
     const margin = { top: 10, right: 30, bottom: 30, left: 40 };

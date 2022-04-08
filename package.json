@@ -8,7 +8,7 @@
     "compile_wasm": "cd src/wasm && GOOS=js GOARCH=wasm go build -o ../../src/assets/main.wasm notiongraph.go",
     "copy_wasm_js_tinygo": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js src/assets/wasm_exec.js",
     "compile_wasm_tinygo": "cd src/wasm && tinygo build -target wasm -o ../../src/assets/main.wasm notiongraph.go",
-    "build": "npm run copy_wasm_js_tinygo && npm run compile_wasm_tinygo && preact build --no-prerender",
+    "build": "npm run copy_wasm_js && npm run compile_wasm && preact build --no-prerender",
     "serve": "sirv build --port 8080 --cors --single",
     "dev": "preact watch",
     "lint": "eslint src",

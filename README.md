@@ -11,3 +11,5 @@
 - Run the tool: `go run notiongraph.go`. This will generate a JSON file `test.json` that contains all the graph data
 - To visualise the graph, use a simple http server (e.g. [http-server](https://www.npmjs.com/package/http-server)) to host the `index.html` file
 - Open your browser and the graph should appear
+
+## How to use

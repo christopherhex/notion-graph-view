@@ -6,10 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"sync"
+	"syscall/js"
 
-	"github.com/joho/godotenv"
 	"github.com/tidwall/gjson"
 )
 
@@ -39,10 +38,10 @@ type NotionGraph struct {
 }
 
 var mu sync.Mutex
+var notionToken string
 
-func main(){
-	godotenv.Load(".env.local")
-  
+func getData() NotionGraph {
+
 	var wg sync.WaitGroup
 
 	var pagesToCheck []NotionPage
@@ -91,30 +90,29 @@ func main(){
 	fmt.Println("Got all mentions")
 
 	// Write To Json Output
-	file, _ := json.MarshalIndent(NotionGraph{
+	return NotionGraph{
 		Pages: pagesToCheck,
 		Links: pageLinks,
 		Databases: availableDatabases,
-	}, "", " ")
- 
-	_ = ioutil.WriteFile("test.json", file, 0644)
+	};
+
 
 }
 
 
+
 func genericNotionRequest(method string, url string, data []byte) []byte {
-	full_url := "https://api.notion.com/v1" + url
+	full_url := "https://cors-proxy.creinto.workers.dev/v1" + url
 
 	// Data := []byte(``)
 
 	req, _ := http.NewRequest(method, full_url, bytes.NewBuffer(data))
 
-	
+	req.Header.Add("x-forwarded-to", "api.notion.com")
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Notion-Version", "2022-02-22")
-	// @NOCOMMIT
-	req.Header.Add("Authorization", "Bearer " + os.Getenv("NOTION_API_KEY"))
+	req.Header.Add("Authorization", "Bearer " + notionToken)
 
 
 	res, _ := http.DefaultClient.Do(req)
@@ -189,4 +187,46 @@ func NotionGetDatabasePages(database_id string) []NotionPage {
 	}
 
 	return foundPages
+}
+
+func main(){
+	c := make(chan int)
+
+	getDataFunction := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+
+		notionToken = args[0].String()
+
+
+		handler := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			resolve := args[0]
+			// reject := args[1]
+
+			go func(){
+				res := getData()
+
+				fmt.Println(res);
+
+				objectConstructor := js.Global().Get("String")
+
+				// resData := map[string]interface{}{
+				// 	"Pages": res.Pages,
+				// 	"Databases": res.Databases,
+				// 	"Links": res.Links,
+				// }
+
+				jsonMapAsStringFormat, _ := json.Marshal(res)
+
+				resolve.Invoke(objectConstructor.New(string(jsonMapAsStringFormat)))
+			}()
+	
+			return nil
+		});
+
+		promiseConstructor := js.Global().Get("Promise")
+		return promiseConstructor.New(handler)
+	})
+
+	js.Global().Set("getData", getDataFunction)
+
+	<-c
 }

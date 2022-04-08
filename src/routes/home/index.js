@@ -4,7 +4,6 @@ import style from './style.css';
 
 const Home = (props) => {
 
-	console.log(props);
 	const notionKey = props["notionKey"];
 
 	return (

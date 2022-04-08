@@ -1,7 +1,7 @@
 {
   "name": "notion-graph",
   "short_name": "notion-graph",
-  "start_url": "./",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#fff",

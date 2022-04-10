@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import wasmLib from '../../lib/wasm';
 import style from './style.css';
 import * as d3 from "d3";
-import { geoConicEquidistantRaw } from 'd3';
-
+import getGraphData from '../../lib/graph';
 /**
  * Ulitlity function that takes a  random string and returns a HEX color
  * Cfr. https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
@@ -33,10 +32,8 @@ const Graph = ({ notionKey }) => {
 
     if (!data) {
         // Getdata is a wasm function
-        wasmLib().then(exp => {
-            getData(notionKey).then(res => {
-                setData(JSON.parse(res));
-            });
+        getGraphData(notionKey).then(res => {
+            setData(res);
         });
     }
 

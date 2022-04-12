@@ -7,7 +7,7 @@ const Home = (props) => {
 	const notionKey = props["notionKey"];
 
 	return (
-		<div class={style.home} >
+		<div class={props.class} >
 			<Graph notionKey={notionKey} />
 		</div>
 	)

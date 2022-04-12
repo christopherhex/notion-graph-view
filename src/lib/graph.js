@@ -32,6 +32,8 @@ const getGraphData = async (notionKey, forceRefresh = false) => {
     if (storageAvailable) {
         localStorage.setItem(LOCALSTORAGE_DATA_KEY, newData)
     }
+    console.log("NEW DATA")
+    console.log(newData);
     return JSON.parse(newData);
 
 }

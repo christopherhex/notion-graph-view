@@ -36,10 +36,7 @@ const Graph = ({ notionKey }) => {
         });
     }
 
-
-
     useLayoutEffect(() => {
-        console.log("useLayoutEffect")
 
         eventBus.on('forceRefresh', () => {
             getGraphData(notionKey, true).then(res => {
@@ -54,8 +51,6 @@ const Graph = ({ notionKey }) => {
                 eventBus.remove("forceRefresh");
             }
         }
-
-
 
         function handleZoom(e) {
             // apply transform to the chart
@@ -77,7 +72,8 @@ const Graph = ({ notionKey }) => {
         const dataNodes = (data.Pages || []).map((page) => {
             return {
                 id: page.Id,
-                name: page.Id,
+                name: page.Name,
+                url: page.Url,
                 color: stringToColour(page.ParentDatabaseId),
             };
         });
@@ -104,7 +100,29 @@ const Graph = ({ notionKey }) => {
             .enter()
             .append("circle")
             .attr("r", 15)
-            .style("fill", "#69b3a2");
+            .style("fill", "#69b3a2")
+            .on("click", function (e, d) {
+                window.open(d.url, "_blank");
+            })
+            .on('mouseover', function (e, d) {
+                d3
+                    .select(this.parentNode)
+                    .append("text")
+                    .attr("x", function () {
+                        return e.x;
+                    })
+                    .attr("y", function () {
+                        return e.y;
+                    })
+                    .attr("dy", ".1em")
+                    .attr("class", "mylabel")
+                    .text(function () {
+                        return d.name
+                    });
+            })
+            .on('mouseout', function (d) {
+                d3.selectAll(".mylabel").remove();
+            });
 
         // Let's list the force we wanna apply on the network
         var simulation = d3
@@ -140,11 +158,9 @@ const Graph = ({ notionKey }) => {
         return () => {
             eventBus.remove("forceRefresh");
         }
-
     })
 
     return (<div ref={divRef} class={style.graph}></div>);
-
 }
 
 

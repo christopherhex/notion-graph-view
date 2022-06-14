@@ -10,9 +10,9 @@ const App = () => {
 
 	return (
 		<div id="app">
-			<Header />
+			<Header class="app-header" />
 			<Router>
-				<Home path="/:params?" ></Home>
+				<Home class="app-content" path="/:params?" ></Home>
 			</Router>
 		</div>
 	);

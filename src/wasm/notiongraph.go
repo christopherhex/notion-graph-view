@@ -176,7 +176,7 @@ func NotionGetDatabasePages(database_id string) []NotionPage {
 		pageId := gjson.Get(item.Raw,`id`).String()
 		pageParentId := gjson.Get(item.Raw,`parent.database_id`).String()
 		pageUrl := gjson.Get(item.Raw,`url`).String()
-		pageName := gjson.Get(item.Raw,`title.0.plain_text`).String()
+		pageName := gjson.Get(item.Raw,`properties.@values.#(type=="title").title.0.text.content`).String()
 
 		foundPages = append(foundPages, NotionPage{
 			Id: pageId,
